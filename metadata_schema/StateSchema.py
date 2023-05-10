@@ -6,10 +6,10 @@ class State(BaseModel):
     
     Fields
     ------
-    id: str
+    fips: str
         FIPS code for state
         Ex., "01" = Alabama
-    name: str
+    state_name: str
         State name
         Ex., Alabama
     urs_url: HttpUrl
@@ -20,7 +20,7 @@ class State(BaseModel):
         Ex., 2009
     """
      
-    id: str
-    name: str
+    fips: str
+    state_name: str
     url: HttpUrl
     year: int
