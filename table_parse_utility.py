@@ -1,4 +1,5 @@
-def noms_parsing(df,state,year) -> None:
+from pandas import DataFrame
+def noms_parsing(df: DataFrame,state: str,year: str) -> None:
     """
     NOMS Table Parsing
     NOMS = National Outcome Measures

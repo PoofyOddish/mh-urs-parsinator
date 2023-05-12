@@ -1,4 +1,7 @@
-def get_fips(state) -> str:
+import json
+from gql import Client,gql
+
+def get_fips(state: str) -> str:
     """
     Get FIPS  
     Return state FIPS value based on state name
@@ -17,7 +20,7 @@ def get_fips(state) -> str:
             else:
                 continue 
 
-def prep_call():
+def prep_call() -> Client:
     from gql.transport.aiohttp import AIOHTTPTransport
     from gql import Client
     import os
@@ -32,7 +35,7 @@ def prep_call():
 
     return(client)
 
-def assert_model(payload,model='BaseMetric'):
+def assert_model(payload:json, model:str ='BaseMetric'):
     from metadata_schema.MetricSchema import BaseMetric,ClientMetricExt,ServiceMetricExt
     from pydantic import ValidationError
 
@@ -59,8 +62,8 @@ def assert_model(payload,model='BaseMetric'):
         print(payload)
         print("\n")
 
-def state_send(payload):
-    from gql import Client, gql
+def state_send(payload: json):
+    from gql import gql
 
     client = prep_call()
 
@@ -82,7 +85,7 @@ def state_send(payload):
 
     result = client.execute(query)
 
-def prep_base_payload(payload):
+def prep_base_payload(payload: json):
     from gql import gql
 
     query = gql(
@@ -110,7 +113,7 @@ def prep_base_payload(payload):
 
     return(query)
 
-def prep_client_payload(payload):
+def prep_client_payload(payload: json):
     from gql import gql
 
     query = gql(
@@ -143,7 +146,7 @@ def prep_client_payload(payload):
 
     return(query)
 
-def metric_send(query):
+def metric_send(query: gql):
     from time import sleep
 
     client = prep_call()
@@ -154,7 +157,7 @@ def metric_send(query):
 
     sleep(1)
 
-def coerce_float(val):
+def coerce_float(val: str):
     if type(val) == str and '%' in val:
         return(float(val.strip('%'))/100)
     
@@ -163,11 +166,11 @@ def coerce_float(val):
     except:
         return(None)
     
-def sanitize(val):
+def sanitize(val: str):
     val = val.replace('"', '')
     return(val)
 
-def demographic_check(val):
+def demographic_check(val: str):
     # Total Categories
     total_categories = ['Total']
 
@@ -232,7 +235,7 @@ def demographic_check(val):
     except:
         print("Error: ",val)
 
-def state_push(state,url,year):
+def state_push(state: str,url: str,year: str):
     import json
     # Prep outbound state data
     state_outbound = json.dumps(
