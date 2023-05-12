@@ -174,6 +174,11 @@ def demographic_check(val):
         ,'65-74'
         ,'75 and over'
         ,'Age Not Available'
+        ,'Age Total'
+        ,'Age 0-17'
+        ,'Age 18-20'
+        ,'Age 21-64'
+        ,'Age 65+'
     ]
 
     # Sex categories
@@ -191,6 +196,8 @@ def demographic_check(val):
         ,'White'
         ,'Multi-Racial'
         ,'Race Not Available'
+        ,'More Than One Race'
+        ,'Black or African American'
     ]
 
     #Ethnicity categories
@@ -198,17 +205,35 @@ def demographic_check(val):
         'Hispanic or Latino Ethnicity'
         ,'Not Hispanic or Latino Ethnicity'
         ,'Ethnicity Not Available'
+        ,'Hispanic or Latino'
+        ,'Not Hispanic or Latino'
     ]
+    try:
+        if val in total_categories:
+            return(None)
+        elif val in age_categories:
+            return({'client-ext':{'age':val}})
+        elif val in sex_categories:
+            return({'client-ext':{'gender':val}})
+        elif val in race_categories:
+            return({'client-ext':{'race':val}})
+        elif val in ethnicity_categories:
+            return({'client-ext':{'ethnicity':val}})
+        else:
+            raise Exception(f'Undefined demographic category: {val}')
+    except:
+        print("Error: ",val)
 
-    if val in total_categories:
-        return(None)
-    elif val in age_categories:
-        return({'client-ext':{'age':val}})
-    elif val in sex_categories:
-        return({'client-ext':{'gender':val}})
-    elif val in race_categories:
-        return({'client-ext':{'race':val}})
-    elif val in ethnicity_categories:
-        return({'client-ext':{'ethnicity':val}})
-    else:
-        raise Exception(f'Undefined demographic category: {val}')
+def state_push(state,url,year):
+    import json
+    # Prep outbound state data
+    state_outbound = json.dumps(
+        {
+            "fips": get_fips(state),
+            "state_name": state.title(),
+            "url": url,
+            "year": int(year),
+        }
+    )
+
+    state_send(state_outbound)
