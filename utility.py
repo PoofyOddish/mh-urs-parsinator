@@ -1,5 +1,13 @@
-def get_fips(state):
-    # Pull FIPS value
+def get_fips(state) -> str:
+    """
+    Get FIPS  
+    Return state FIPS value based on state name
+    
+    Arguments
+    ------
+    state (str): Name of state for which FIPS is being requested
+    """
+
     with open("./data/fips.txt") as fips_file:
         for line in fips_file:
             state_fip = line.strip().split(maxsplit=1)

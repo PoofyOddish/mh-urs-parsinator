@@ -1,4 +1,15 @@
-def noms_parsing(df,state,year):
+def noms_parsing(df,state,year) -> None:
+    """
+    NOMS Table Parsing
+    NOMS = National Outcome Measures
+    
+    Arguments
+    ------
+    df (dataframe): NOMS Table to parse from a dataframe
+    state (str): Name of state for which data is being processed
+    year (str): Year for which data is being processed
+    """
+
     import utility as util
     for elem in list(
             set(df.iloc[0].index.tolist())
