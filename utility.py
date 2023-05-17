@@ -172,7 +172,11 @@ def sanitize(val: str):
 
 def demographic_check(val: str):
     # Total Categories
-    total_categories = ['Total']
+    total_categories = ['Total'
+        ,'Age TOTAL'
+        ,'Gender TOTAL'
+        ,'TOTAL'
+    ]
 
     # Age Categories
     age_categories = [
@@ -190,6 +194,19 @@ def demographic_check(val: str):
         ,'Age 18-20'
         ,'Age 21-64'
         ,'Age 65+'
+        ,'Age 18 to 20'
+        ,'Age 21 to 64'
+        ,'Age 65 and over'
+    ]
+
+    # Adult/Youth Categories
+    adult_youth = [
+        'All Persons Served'
+        ,'Children under age 18'
+        ,'Adults over age 18'
+        ,'Children'
+        ,'Adults'
+        ,'Age NA'
     ]
 
     # Sex categories
@@ -219,6 +236,16 @@ def demographic_check(val: str):
         ,'Hispanic or Latino'
         ,'Not Hispanic or Latino'
     ]
+
+    #Diagnosis categories
+    diagnosis_categories = [
+        'Schizophrenia and Related Disorders'
+        ,'Bipolar and Mood Disorders'
+        ,'Other Psychoses'
+        ,'All other Diagnoses'
+        ,'No Diagnosis and Deferred Diagnosis'
+    ]
+
     try:
         if val in total_categories:
             return(None)
@@ -230,8 +257,45 @@ def demographic_check(val: str):
             return({'client-ext':{'race':val}})
         elif val in ethnicity_categories:
             return({'client-ext':{'ethnicity':val}})
+        elif val in diagnosis_categories:
+            return({'client-ext':{'diagnosis':val}})
+        elif val in adult_youth:
+            return({'client-ext':{'adult_or_child':val}})
         else:
             raise Exception(f'Undefined demographic category: {val}')
+    except:
+        print("Error: ",val)
+
+def setting_check(val: str):
+    # Total Categories
+    total_categories = ['Total']
+
+    # Service Setting Categories
+    service_settings = [
+        'Private Residence'
+        ,'Foster Home'
+        ,'Residential Care'
+        ,'Crisis Residence'
+        ,'Residential Treatment Center'
+        ,'Institutional Setting'
+        ,'Jail (Correctional Facility)'
+        ,'Homeless (Shelter)'
+        ,'Other'
+        ,'Not Available'
+        ,'State Hospitals'
+        ,'Other Inpatient'
+        ,'Residential Treatment Centers'
+        ,'Community Progams'
+        ,'State Psychiatric Hospitals'
+    ]
+
+    try:
+        if val in total_categories:
+            return(None)
+        elif val in service_settings:
+            return({'service-ext':{'service_setting':val}})
+        else:
+            raise Exception(f'Undefined service setting category: {val}')
     except:
         print("Error: ",val)
 
