@@ -18,9 +18,10 @@ state = "Alabama"
 year = "2021"
 url = "https://www.samhsa.gov/data/sites/default/files/reports/rpt39371/Alabama.pdf"
 
-# Pull requested PDF
-df = tabula.read_pdf(f"./data/{year}/{state}{year}.pdf", pages="all")
+existing_data = util.urs_data_get(state,year)
 
+# Pull requested PDF
+df = tabula.read_pdf(f"./data/{year}/{state}{year}.pdf", pages="1-2") #all
 # NOMS
 noms_tables = [
     "Utilization Rates/Number of Consumers Served",
@@ -51,7 +52,7 @@ outcome_tables = [
 for d in range(0, len(df)-1):
     try:
         if df[d].columns[0] in noms_tables:
-            tp_util.noms_parsing(df[d],state,year)
+            tp_util.noms_parsing(df[d],state,year,[x for x in existing_data['metrics'] if x['domain'] == 'NOMS'])
 
         elif set(access_tables)&set(df[d].iloc[1].index.tolist()):
             print(f'first value: {df[d].iloc[3][1]}')
@@ -72,11 +73,17 @@ for d in range(0, len(df)-1):
                         }
 
                         if not demographic:
-                            util.assert_model(access_test)
-                            print("\n")
+                            dup_check = util.check_dup(access_test,[x for x in existing_data['metrics'] if x['domain'] == 'ACCESS'])
+
+                            if not dup_check:
+                                util.assert_model(access_test)
+                                print("\n")
                         else:
-                            util.assert_model(access_test|demographic,model='ClientMetricExt')
-                            print("\n")
+                            dup_check = util.check_dup(access_test|demographic,[x for x in existing_data['metrics'] if x['domain'] == 'ACCESS'])
+
+                            if not dup_check:
+                                util.assert_model(access_test|demographic,model='ClientMetricExt')
+                                print("\n")
 
         elif set(access_tables)&set(df[d].iloc[0].index.tolist()):
             table_name = None
@@ -106,11 +113,18 @@ for d in range(0, len(df)-1):
                         }
                         
                         if not demographic:
-                            util.assert_model(access_test)
-                            print("\n")
+                            dup_check = util.check_dup(access_test,[x for x in existing_data['metrics'] if x['domain'] == 'ACCESS'])
+
+                            if not dup_check:
+                                util.assert_model(access_test)
+                                print("\n")
                         else:
-                            util.assert_model(access_test|demographic,model='ClientMetricExt')
-                            print("\n")
+                            dup_check = util.check_dup(access_test|demographic,[x for x in existing_data['metrics'] if x['domain'] == 'ACCESS'])
+
+                            if not dup_check:
+                                util.assert_model(access_test|demographic,model='ClientMetricExt')
+                                print("\n")
+
         elif set(outcome_tables)&set(df[d].iloc[0].index.tolist()):
             table_name = None
             print(f'first value: {df[d].iloc[row][1]}')
@@ -139,11 +153,17 @@ for d in range(0, len(df)-1):
                                         }
                         
                         if not demographic:
-                            util.assert_model(outcomes_test)
-                            print("\n")
+                            dup_check = util.check_dup(outcomes_test,[x for x in existing_data['metrics'] if x['domain'] == 'OUTCOMES'])
+
+                            if not dup_check:
+                                util.assert_model(outcomes_test)
+                                print("\n")
                         else:
-                            util.assert_model(outcomes_test|demographic,model='ClientMetricExt')
-                            print("\n")
+                            dup_check = util.check_dup(outcomes_test|demographic,[x for x in existing_data['metrics'] if x['domain'] == 'OUTCOMES'])
+
+                            if not dup_check:
+                                util.assert_model(outcomes_test|demographic,model='ClientMetricExt')
+                                print("\n")
 
         
         
@@ -151,5 +171,6 @@ for d in range(0, len(df)-1):
             print("Dang\n")
             print(df[d].iloc[0])
             print("\n")
-    except:
+    except Exception as e:
         print("Something bad happened. Will deal with that later.")
+        print(e)
