@@ -1,5 +1,6 @@
 import json
 from gql import Client,gql
+from pandas import DataFrame
 
 def get_fips(state: str) -> str:
     """
@@ -312,3 +313,77 @@ def state_push(state: str,url: str,year: str):
     )
 
     state_send(state_outbound)
+
+def urs_data_get(state: str, year: str) -> DataFrame:
+    """
+    Get URS Data  
+    Return URS data from API for selected State/Year
+    
+    Arguments
+    ------
+    state (str): Name of state for which URS is being requested
+    year (str): Year for which URS is being requested
+    """
+
+    import pandas as pd
+    client = prep_call()
+
+    query = gql(
+        '''query GetMetrics {
+  metrics(where: {state_name: {_eq: "%s"}, year: {_eq: %s}}) {
+    ESMI
+    SMI_SED
+    adult_or_child
+    age
+    domain
+    employment_status
+    ethnicity
+    gender
+    living_situation
+    metric_name
+    race
+    service_location
+    service_type
+    state_name
+    table_name
+    metric_result
+    diagnosis
+    year
+  }
+}'''  % (state,year))
+
+    result = client.execute(query)
+
+    return(result)
+
+    #return(pd.json_normalize(result['metrics']))
+
+def check_dup(payload: dict,getdata: list) -> bool:
+    """
+    Check for Duplicate 
+    Check to see if payload already exists in API data
+    
+    Arguments
+    ------
+    payload (dict): Data set to be pushed to API
+    getdata (list): URS dataset for requested state/year
+    """
+
+    cols = ['ESMI', 'SMI_SED', 'adult_or_child', 'age'
+            , 'employment_status', 'ethnicity', 'gender'
+            , 'living_situation', 'race', 'service_location'
+            , 'service_type', 'diagnosis','year']
+    
+    for col in cols:
+        if col == 'year':
+            payload[col] = int(payload[col])
+        else:
+            payload.setdefault(col)
+
+    if payload in getdata:
+        print("Duplicate record")
+        return True #duplicate data
+    else:
+        print("Unique record")
+        return False #not duplicate data
+    
