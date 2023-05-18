@@ -350,7 +350,7 @@ def urs_data_get(state: str, year: str) -> DataFrame:
     diagnosis
     year
   }
-}'''  % (state,year))
+}'''  % (str(state),int(year)))
 
     result = client.execute(query)
 
