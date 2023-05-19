@@ -158,7 +158,17 @@ def metric_send(query: gql):
 
     sleep(1)
 
-def coerce_float(val: str):
+def coerce_float(val: str) -> float:
+    """
+    Coerce float
+    Attempts to convert str value into a float.
+    If a % is detected, will convert accordingly.
+    
+    Arguments
+    ------
+    val (str): String to be coerced into a float.
+    """
+        
     if type(val) == str and '%' in val:
         return(float(val.strip('%'))/100)
     
@@ -167,11 +177,29 @@ def coerce_float(val: str):
     except:
         return(None)
     
-def sanitize(val: str):
+def sanitize(val: str) -> str:
+    """
+    Sanitize Strings
+    Helper function to clean up strings. Currently only removes double quotes.
+    
+    Arguments
+    ------
+    val (str): String value to sanitize
+    """
+
     val = val.replace('"', '')
     return(val)
 
-def demographic_check(val: str):
+def demographic_check(val: str) -> dict:
+    """
+    Demographics Extension
+    Formats categorical demographic information into expected GQL format
+    
+    Arguments
+    ------
+    val (str): Demographic value to be converted to GQL format
+    """
+
     # Total Categories
     total_categories = ['Total'
         ,'Age TOTAL'
@@ -267,7 +295,16 @@ def demographic_check(val: str):
     except:
         print("Error: ",val)
 
-def setting_check(val: str):
+def setting_check(val: str) -> dict:
+    """
+    Service Setting Extension
+    Formats categorical service settings into expected GQL format
+    
+    Arguments
+    ------
+    val (str): Service setting value to be converted to GQL format
+    """
+        
     # Total Categories
     total_categories = ['Total']
 
@@ -300,7 +337,18 @@ def setting_check(val: str):
     except:
         print("Error: ",val)
 
-def state_push(state: str,url: str,year: str):
+def state_push(state: str,url: str,year: str) ->  None:
+    """
+    Push State Info 
+    Push info about a state to API
+    
+    Arguments
+    ------
+    state (str): State that is being pushed
+    url (str): URL to SAMHSA URS page for state/year
+    year (str): Year that is being pushed
+    """
+
     import json
     # Prep outbound state data
     state_outbound = json.dumps(
