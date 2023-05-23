@@ -435,3 +435,19 @@ def check_dup(payload: dict,getdata: list) -> bool:
         print("Unique record")
         return False #not duplicate data
     
+def name_table(first_val) -> str:
+    print(f'first value: {first_val}')
+    table_name = input("Confirm table name: ")
+    return(table_name)
+
+def compile_base_metric(state,year,domain,table_name,metric_name,metric_result) -> dict:
+    metric_dict = {
+        "state_name": state,
+        "year": year,
+        "domain": domain,
+        "table_name": sanitize(table_name),
+        "metric_name": sanitize(metric_name),
+        "metric_result": coerce_float(metric_result),
+        }
+    
+    return(metric_dict)
