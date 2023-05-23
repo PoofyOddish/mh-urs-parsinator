@@ -190,7 +190,7 @@ def sanitize(val: str) -> str:
     val = val.replace('"', '')
     return(val)
 
-def demographic_check(val: str) -> dict:
+def demographic_check(val: str) -> tuple:
     """
     Demographics Extension
     Formats categorical demographic information into expected GQL format
@@ -207,8 +207,8 @@ def demographic_check(val: str) -> dict:
         ,'TOTAL'
     ]
 
-    # Age Categories
-    age_categories = [
+    demo_categories = {
+        'age': [
         '0-12'
         ,'13-17'
         ,'18-20'
@@ -226,27 +226,21 @@ def demographic_check(val: str) -> dict:
         ,'Age 18 to 20'
         ,'Age 21 to 64'
         ,'Age 65 and over'
-    ]
-
-    # Adult/Youth Categories
-    adult_youth = [
+    ],
+    'adult_or_child': [
         'All Persons Served'
         ,'Children under age 18'
         ,'Adults over age 18'
         ,'Children'
         ,'Adults'
         ,'Age NA'
-    ]
-
-    # Sex categories
-    sex_categories = [
+    ],
+    'gender' : [
         'Female'
         ,'Male'
         ,'Gender Not Available'
-    ]
-
-    # Race categories
-    race_categories = [
+    ],
+    'race' : [
         'American Indian/Alaskan Native'
         ,'Asian'
         ,'Black/African American'
@@ -255,19 +249,15 @@ def demographic_check(val: str) -> dict:
         ,'Race Not Available'
         ,'More Than One Race'
         ,'Black or African American'
-    ]
-
-    #Ethnicity categories
-    ethnicity_categories = [
+    ],
+    'ethnicity' : [
         'Hispanic or Latino Ethnicity'
         ,'Not Hispanic or Latino Ethnicity'
         ,'Ethnicity Not Available'
         ,'Hispanic or Latino'
         ,'Not Hispanic or Latino'
-    ]
-
-    #Diagnosis categories
-    diagnosis_categories = [
+    ],
+    'diagnosis' : [
         'Schizophrenia and Related Disorders'
         ,'Bipolar and Mood Disorders'
         ,'Other Psychoses'
@@ -275,22 +265,20 @@ def demographic_check(val: str) -> dict:
         ,'No Diagnosis and Deferred Diagnosis'
     ]
 
+    }
+
+    model_ext = {}
+
     try:
         if val in total_categories:
-            return(None)
-        elif val in age_categories:
-            return({'client-ext':{'age':val}})
-        elif val in sex_categories:
-            return({'client-ext':{'gender':val}})
-        elif val in race_categories:
-            return({'client-ext':{'race':val}})
-        elif val in ethnicity_categories:
-            return({'client-ext':{'ethnicity':val}})
-        elif val in diagnosis_categories:
-            return({'client-ext':{'diagnosis':val}})
-        elif val in adult_youth:
-            return({'client-ext':{'adult_or_child':val}})
-        else:
+            return((model_ext,'BaseModel'))
+        
+        for key,value in demo_categories.items():
+            if val in value:
+                model_ext['client-ext']={key:val}
+                return((model_ext,'ClientMetricExt'))
+            
+        if 'client-ext' not in model_ext:
             raise Exception(f'Undefined demographic category: {val}')
     except:
         print("Error: ",val)
@@ -435,3 +423,19 @@ def check_dup(payload: dict,getdata: list) -> bool:
         print("Unique record")
         return False #not duplicate data
     
+def name_table(first_val) -> str:
+    print(f'first value: {first_val}')
+    table_name = input("Confirm table name: ")
+    return(table_name)
+
+def compile_base_metric(state,year,domain,table_name,metric_name,metric_result) -> dict:
+    metric_dict = {
+        "state_name": state,
+        "year": year,
+        "domain": domain,
+        "table_name": sanitize(table_name),
+        "metric_name": sanitize(metric_name),
+        "metric_result": coerce_float(metric_result),
+        }
+    
+    return(metric_dict)

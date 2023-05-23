@@ -19,16 +19,9 @@ def noms_parsing(df: DataFrame,state: str,year: str, URS_data: list) -> None:
             & set(["State", "State Number", "State Rate"])):
             for row in range(0, df.shape[0]):
 
-                test = {
-                    "state_name": state,
-                    "year": year,
-                    "domain": "NOMS",
-                    "table_name": util.sanitize(df.columns[0]),
-                    "metric_name": util.sanitize(df.iloc[row][0]),
-                    "metric_result": util.coerce_float(df.iloc[row].loc[elem]),
-                }
+                noms_metric = util.compile_base_metric(state,year,"NOMS",df.columns[0],df.iloc[row][0],df.iloc[row].loc[elem])
                 
-                dup_check = util.check_dup(test,URS_data)
+                dup_check = util.check_dup(noms_metric,URS_data)
 
                 if not dup_check:
-                    util.assert_model(test)
+                    util.assert_model(noms_metric)
