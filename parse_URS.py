@@ -1,4 +1,4 @@
-def urs_parsinator(state: str,year: str,url: str) -> None:
+def urs_parsinator(state: str,year: str,url: str,page_range:str = 'all') -> None:
     import tabula
     import utility as util
     import table_parse_utility as tp_util
@@ -12,41 +12,39 @@ def urs_parsinator(state: str,year: str,url: str) -> None:
     existing_data = util.urs_data_get(state,year)
 
     # Pull requested PDF
-    df = tabula.read_pdf(f"./data/{year}/{state}{year}.pdf", pages="1-2") #all
+    df = tabula.read_pdf(f"./data/{year}/{state}{year}.pdf", pages=page_range) #all
 
-    # NOMS
-    noms_tables = [
-        "Utilization Rates/Number of Consumers Served",
-        "Adult Employment Status",
-        "Adult Consumer Survey Measures",
-        "Child/Family Consumer Survey Measures",
-        'Readmission Rates:(Civil "non-Forensic" clients)',
-        "Living Situation",
-        "Adult EBP Services",
-        "Child/Adolescent EBP Services",
-        "Change in Social Connectedness",
-    ]
-
-    # Access
-    access_tables = [
-        "Total Served"
-        ,"Served in Community"
-        ,"Served in State Psychiatric Hospitals"
-        ,"Number Served"
-    ]
-
-    #Outcome
-    outcome_tables = [
-        "Employed as Percent of those in Labor"
-        ,"Employed as a % of"
-    ]
+    # Tables
+    domain_tables = {
+        'NOMS': [
+            "Utilization Rates/Number of Consumers Served",
+            "Adult Employment Status",
+            "Adult Consumer Survey Measures",
+            "Child/Family Consumer Survey Measures",
+            'Readmission Rates:(Civil "non-Forensic" clients)',
+            "Living Situation",
+            "Adult EBP Services",
+            "Child/Adolescent EBP Services",
+            "Change in Social Connectedness",
+        ],
+        'ACCESS': [
+            "Total Served"
+            ,"Served in Community"
+            ,"Served in State Psychiatric Hospitals"
+            ,"Number Served"
+        ],
+        'OUTCOMES': [
+            "Employed as Percent of those in Labor"
+            ,"Employed as a % of"
+        ]
+    }
 
     for d in range(0, len(df)-1):
         try:
-            if df[d].columns[0] in noms_tables:
+            if df[d].columns[0] in domain_tables['NOMS']:
                 tp_util.noms_parsing(df[d],state,year,[x for x in existing_data['metrics'] if x['domain'] == 'NOMS'])
 
-            elif set(access_tables)&set(df[d].iloc[1].index.tolist()):
+            elif set(domain_tables['NOMS'])&set(df[d].iloc[1].index.tolist()):
                 table_name = util.name_table(df[d].iloc[row][1])
                 metric_name = input("Confirm metric name: ")
 
@@ -57,20 +55,13 @@ def urs_parsinator(state: str,year: str,url: str) -> None:
                             
                             access_metric = util.compile_base_metric(state,year,"ACCESS",table_name,metric_name,df[d].iloc[row][1])
 
-                            if not demographic:
-                                dup_check = util.check_dup(access_metric,[x for x in existing_data['metrics'] if x['domain'] == 'ACCESS'])
+                            dup_check = util.check_dup(access_metric,[x for x in existing_data['metrics'] if x['domain'] == 'ACCESS'])
 
-                                if not dup_check:
-                                    util.assert_model(access_metric)
-                                    print("\n")
-                            else:
-                                dup_check = util.check_dup(access_metric|demographic,[x for x in existing_data['metrics'] if x['domain'] == 'ACCESS'])
+                            if not dup_check:
+                                util.assert_model(access_metric|demographic[0],demographic[1])
+                                print("\n")
 
-                                if not dup_check:
-                                    util.assert_model(access_metric|demographic,model='ClientMetricExt')
-                                    print("\n")
-
-            elif set(access_tables)&set(df[d].iloc[0].index.tolist()):
+            elif set(domain_tables['ACCESS'])&set(df[d].iloc[0].index.tolist()):
                 table_name = None
                 for row in range(4, df[d].shape[0]):
                     if table_name is None:
@@ -89,20 +80,13 @@ def urs_parsinator(state: str,year: str,url: str) -> None:
                             
                             access_metric = util.compile_base_metric(state,year,"ACCESS",table_name,metrics[elem],df[d].iloc[row][elem+1])
                             
-                            if not demographic:
-                                dup_check = util.check_dup(access_metric,[x for x in existing_data['metrics'] if x['domain'] == 'ACCESS'])
+                            dup_check = util.check_dup(access_metric,[x for x in existing_data['metrics'] if x['domain'] == 'ACCESS'])
 
-                                if not dup_check:
-                                    util.assert_model(access_metric)
-                                    print("\n")
-                            else:
-                                dup_check = util.check_dup(access_metric|demographic,[x for x in existing_data['metrics'] if x['domain'] == 'ACCESS'])
+                            if not dup_check:
+                                util.assert_model(access_metric|demographic[0],demographic[1])
+                                print("\n")
 
-                                if not dup_check:
-                                    util.assert_model(access_metric|demographic,model='ClientMetricExt')
-                                    print("\n")
-
-            elif set(outcome_tables)&set(df[d].iloc[0].index.tolist()):
+            elif set(domain_tables['OUTCOMES'])&set(df[d].iloc[0].index.tolist()):
                 table_name = util.name_table(df[d].iloc[row][1])
 
                 for row in range(3, df[d].shape[0]):
@@ -115,23 +99,16 @@ def urs_parsinator(state: str,year: str,url: str) -> None:
                                     ,"Unemployed"
                                     ,"In Labor Force"
                                     ,"With Known Employment Status"]
-                            
-                            demographic=util.demographic_check(df[d].iloc[row][0])
 
                             outcomes_metric = util.compile_base_metric(state,year,"OUTCOMES",table_name,metrics[elem],df[d].iloc[row][elem+1])
                             
-                            if not demographic:
-                                dup_check = util.check_dup(outcomes_metric,[x for x in existing_data['metrics'] if x['domain'] == 'OUTCOMES'])
+                            demographic=util.demographic_check(df[d].iloc[row][0])
 
-                                if not dup_check:
-                                    util.assert_model(outcomes_metric)
-                                    print("\n")
-                            else:
-                                dup_check = util.check_dup(outcomes_metric|demographic,[x for x in existing_data['metrics'] if x['domain'] == 'OUTCOMES'])
+                            dup_check = util.check_dup(outcomes_metric,[x for x in existing_data['metrics'] if x['domain'] == 'OUTCOMES'])
 
-                                if not dup_check:
-                                    util.assert_model(outcomes_metric|demographic,model='ClientMetricExt')
-                                    print("\n")
+                            if not dup_check:
+                                util.assert_model(outcomes_metric|demographic[0],demographic[1])
+                                print("\n")
 
             else:
                 print("Dang\n")
@@ -141,4 +118,4 @@ def urs_parsinator(state: str,year: str,url: str) -> None:
             print("Something bad happened. Will deal with that later.")
             print(e)
 
-urs_parsinator("Alabama","2021","https://www.samhsa.gov/data/sites/default/files/reports/rpt39371/Alabama.pdf")
+urs_parsinator("Alabama","2021","https://www.samhsa.gov/data/sites/default/files/reports/rpt39371/Alabama.pdf","1-10")
