@@ -25,3 +25,6 @@ def test_demo_check_bad_value():
 
 def test_demo_check_good_value():
     assert util.demographic_check(val='Female') == {'client-ext':{'gender':'Female'}}
+
+def test_demo_check_aggregate_value():
+    assert util.demographic_check(val='Total') == None
