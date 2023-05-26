@@ -36,18 +36,28 @@ def prep_call() -> Client:
 
     return(client)
 
-def assert_model(payload:json, model:str ='BaseMetric'):
+def assert_model(env: str, payload:json, model:str ='BaseMetric'):
+    """
+    Assert Model  
+    Validate potential API payload against Pydantic data model
+    
+    Arguments
+    ------
+    env (str): Indicates if data should be pushed to PROD or DEV db
+    payload (dict): dataset to validate with pydantic data model
+    model (str): Pydantic data model to use in validation
+    """
     from metadata_schema.MetricSchema import BaseMetric,ClientMetricExt,ServiceMetricExt
     from pydantic import ValidationError
 
     try:
         if model == 'BaseMetric':
             BaseMetric(**payload)
-            metric_send(prep_base_payload(payload))
+            metric_send(prep_base_payload(env,payload))
             
         elif model == 'ClientMetricExt':
             ClientMetricExt(**payload)
-            metric_send(prep_client_payload(payload))
+            metric_send(prep_client_payload(env,payload))
 
         elif model == 'ServiceMetricExt':
             ServiceMetricExt(**payload)
@@ -63,7 +73,10 @@ def assert_model(payload:json, model:str ='BaseMetric'):
         print(payload)
         print("\n")
 
-def state_send(payload: json):
+def state_send(env:str,payload: json):
+    """
+    env (str): Indicates if data should be pushed to PROD or DEV db
+    """
     from gql import gql
 
     client = prep_call()
@@ -71,7 +84,7 @@ def state_send(payload: json):
     query = gql(
     """
     mutation insert_state {
-    insert_state(objects: {fips: "%s", year: %s, url: "%s", state_name: "%s"}) {
+    insert_%sstate(objects: {fips: "%s", year: %s, url: "%s", state_name: "%s"}) {
         returning {
         fips
         year
@@ -81,18 +94,28 @@ def state_send(payload: json):
     }
     }
 
-    """ % (payload['fips_code'],int(payload['year']), payload['url'], payload['state'].title())
+    """ % (dev_prod(env),payload['fips_code'],int(payload['year']), payload['url'], payload['state'].title())
     )
 
     result = client.execute(query)
 
-def prep_base_payload(payload: json):
+def prep_base_payload(env: str, payload: json) -> gql:
+    """
+    Prep Base Payload
+    Converts base metric dict to gql obj
+    
+    Arguments
+    ------
+    env (str): Indicates if data should be pushed to PROD or DEV db
+    payload (dict): dataset to convert to gql query
+    """
+        
     from gql import gql
 
     query = gql(
     """
     mutation insert_base_metrics {
-    insert_metrics(objects: {state_name: "%s", year: %s, domain: "%s", table_name: "%s", metric_name: "%s", metric_result: %s}) {
+    insert_%smetrics(objects: {state_name: "%s", year: %s, domain: "%s", table_name: "%s", metric_name: "%s", metric_result: %s}) {
         returning {
         state_name
         year
@@ -104,7 +127,8 @@ def prep_base_payload(payload: json):
     }
     }
 
-    """ % (payload['state_name']
+    """ % (dev_prod(env)
+            ,payload['state_name']
            ,int(payload['year'])
             , payload['domain']
             , payload['table_name']
@@ -114,13 +138,22 @@ def prep_base_payload(payload: json):
 
     return(query)
 
-def prep_client_payload(payload: json):
+def prep_client_payload(env:str, payload: json):
+    """
+    Prep Client Payload
+    Converts extended client model dict to gql obj
+    
+    Arguments
+    ------
+    env (str): Indicates if data should be pushed to PROD or DEV db
+    payload (dict): dataset to convert to gql query
+    """
     from gql import gql
 
     query = gql(
     """
     mutation insert_base_metrics {
-    insert_metrics(objects: {state_name: "%s", year: %s, domain: "%s", table_name: "%s", metric_name: "%s", metric_result: %s, %s:"%s"}) {
+    insert_%smetrics(objects: {state_name: "%s", year: %s, domain: "%s", table_name: "%s", metric_name: "%s", metric_result: %s, %s:"%s"}) {
         returning {
         state_name
         year
@@ -133,7 +166,8 @@ def prep_client_payload(payload: json):
     }
     }
 
-    """ % (payload['state_name']
+    """ % (dev_prod(env)
+            ,payload['state_name']
            ,int(payload['year'])
             , payload['domain']
             , payload['table_name']
@@ -350,13 +384,14 @@ def state_push(state: str,url: str,year: str) ->  None:
 
     state_send(state_outbound)
 
-def urs_data_get(state: str, year: str) -> DataFrame:
+def urs_data_get(env: str, state: str, year: str) -> DataFrame:
     """
     Get URS Data  
     Return URS data from API for selected State/Year
     
     Arguments
     ------
+    env (str): Indicates if data should be pushed to PROD or DEV db
     state (str): Name of state for which URS is being requested
     year (str): Year for which URS is being requested
     """
@@ -366,7 +401,7 @@ def urs_data_get(state: str, year: str) -> DataFrame:
 
     query = gql(
         '''query GetMetrics {
-  metrics(where: {state_name: {_eq: "%s"}, year: {_eq: %s}}) {
+  %smetrics(where: {state_name: {_eq: "%s"}, year: {_eq: %s}}) {
     ESMI
     SMI_SED
     adult_or_child
@@ -386,7 +421,7 @@ def urs_data_get(state: str, year: str) -> DataFrame:
     diagnosis
     year
   }
-}'''  % (str(state),int(year)))
+}'''  % (dev_prod(env),str(state),int(year)))
 
     result = client.execute(query)
 
@@ -439,3 +474,12 @@ def compile_base_metric(state,year,domain,table_name,metric_name,metric_result) 
         }
     
     return(metric_dict)
+
+def dev_prod(env: str) -> str:
+    match env.lower():
+        case 'dev':
+            return('dev_')
+        case 'prod':
+            return('')
+        case _:
+            raise Exception
