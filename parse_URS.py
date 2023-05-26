@@ -1,15 +1,14 @@
-def urs_parsinator(state: str,year: str,url: str,page_range:str = 'all') -> None:
+def urs_parsinator(env: str , state: str, year: str,url: str,page_range:str = 'all') -> None:
     import tabula
     import utility as util
     import table_parse_utility as tp_util
     import numpy as np
 
-    # Define values
-    state = "Alabama"
-    year = "2021"
-    url = "https://www.samhsa.gov/data/sites/default/files/reports/rpt39371/Alabama.pdf"
-
-    existing_data = util.urs_data_get(state,year)
+    #Add state/year to state table
+    util.state_push(env, state,url,year)
+    
+    #Pull existing data from hasura
+    existing_data = util.urs_data_get(env,state,year)
 
     # Pull requested PDF
     df = tabula.read_pdf(f"./data/{year}/{state}{year}.pdf", pages=page_range) #all
@@ -42,7 +41,7 @@ def urs_parsinator(state: str,year: str,url: str,page_range:str = 'all') -> None
     for d in range(0, len(df)-1):
         try:
             if df[d].columns[0] in domain_tables['NOMS']:
-                tp_util.noms_parsing(df[d],state,year,[x for x in existing_data['metrics'] if x['domain'] == 'NOMS'])
+                tp_util.noms_parsing(env,df[d],state,year,[x for x in existing_data[util.dev_prod(env)+'metrics'] if x['domain'] == 'NOMS'])
 
             elif set(domain_tables['NOMS'])&set(df[d].iloc[1].index.tolist()):
                 table_name = util.name_table(df[d].iloc[row][1])
@@ -55,10 +54,10 @@ def urs_parsinator(state: str,year: str,url: str,page_range:str = 'all') -> None
                             
                             access_metric = util.compile_base_metric(state,year,"ACCESS",table_name,metric_name,df[d].iloc[row][1])
 
-                            dup_check = util.check_dup(access_metric,[x for x in existing_data['metrics'] if x['domain'] == 'ACCESS'])
+                            dup_check = util.check_dup(access_metric,[x for x in existing_data[util.dev_prod(env)+'metrics'] if x['domain'] == 'ACCESS'])
 
                             if not dup_check:
-                                util.assert_model(access_metric|demographic[0],demographic[1])
+                                util.assert_model(env,access_metric|demographic[0],demographic[1])
                                 print("\n")
 
             elif set(domain_tables['ACCESS'])&set(df[d].iloc[0].index.tolist()):
@@ -80,10 +79,10 @@ def urs_parsinator(state: str,year: str,url: str,page_range:str = 'all') -> None
                             
                             access_metric = util.compile_base_metric(state,year,"ACCESS",table_name,metrics[elem],df[d].iloc[row][elem+1])
                             
-                            dup_check = util.check_dup(access_metric,[x for x in existing_data['metrics'] if x['domain'] == 'ACCESS'])
+                            dup_check = util.check_dup(access_metric,[x for x in existing_data[util.dev_prod(env)+'metrics'] if x['domain'] == 'ACCESS'])
 
                             if not dup_check:
-                                util.assert_model(access_metric|demographic[0],demographic[1])
+                                util.assert_model(env,access_metric|demographic[0],demographic[1])
                                 print("\n")
 
             elif set(domain_tables['OUTCOMES'])&set(df[d].iloc[0].index.tolist()):
@@ -104,10 +103,10 @@ def urs_parsinator(state: str,year: str,url: str,page_range:str = 'all') -> None
                             
                             demographic=util.demographic_check(df[d].iloc[row][0])
 
-                            dup_check = util.check_dup(outcomes_metric,[x for x in existing_data['metrics'] if x['domain'] == 'OUTCOMES'])
+                            dup_check = util.check_dup(outcomes_metric,[x for x in existing_data[util.dev_prod(env)+'metrics'] if x['domain'] == 'OUTCOMES'])
 
                             if not dup_check:
-                                util.assert_model(outcomes_metric|demographic[0],demographic[1])
+                                util.assert_model(env,outcomes_metric|demographic[0],demographic[1])
                                 print("\n")
 
             else:
@@ -118,4 +117,8 @@ def urs_parsinator(state: str,year: str,url: str,page_range:str = 'all') -> None
             print("Something bad happened. Will deal with that later.")
             print(e)
 
-urs_parsinator("Alabama","2021","https://www.samhsa.gov/data/sites/default/files/reports/rpt39371/Alabama.pdf","1-10")
+urs_parsinator('prod',
+               "Alabama",
+               "2021",
+               "https://www.samhsa.gov/data/sites/default/files/reports/rpt39371/Alabama.pdf",
+               "1-3")
