@@ -4,11 +4,10 @@ def urs_parsinator(env: str , state: str, year: str,url: str,page_range:str = 'a
     import table_parse_utility as tp_util
     import numpy as np
 
-    # Define values
-    state = "Alabama"
-    year = "2021"
-    url = "https://www.samhsa.gov/data/sites/default/files/reports/rpt39371/Alabama.pdf"
-
+    #Add state/year to state table
+    util.state_push(env, state,url,year)
+    
+    #Pull existing data from hasura
     existing_data = util.urs_data_get(env,state,year)
 
     # Pull requested PDF
@@ -118,4 +117,8 @@ def urs_parsinator(env: str , state: str, year: str,url: str,page_range:str = 'a
             print("Something bad happened. Will deal with that later.")
             print(e)
 
-urs_parsinator('prod',"Alabama","2021","https://www.samhsa.gov/data/sites/default/files/reports/rpt39371/Alabama.pdf","1-3")
+urs_parsinator('prod',
+               "Alabama",
+               "2021",
+               "https://www.samhsa.gov/data/sites/default/files/reports/rpt39371/Alabama.pdf",
+               "1-3")

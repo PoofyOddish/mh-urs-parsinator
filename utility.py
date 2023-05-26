@@ -73,7 +73,7 @@ def assert_model(env: str, payload:json, model:str ='BaseMetric'):
         print(payload)
         print("\n")
 
-def state_send(env:str,payload: json):
+def state_send(env:str,payload: dict) -> None:
     """
     env (str): Indicates if data should be pushed to PROD or DEV db
     """
@@ -83,7 +83,7 @@ def state_send(env:str,payload: json):
 
     query = gql(
     """
-    mutation insert_state {
+    mutation insert_%sstate {
     insert_%sstate(objects: {fips: "%s", year: %s, url: "%s", state_name: "%s"}) {
         returning {
         fips
@@ -94,10 +94,12 @@ def state_send(env:str,payload: json):
     }
     }
 
-    """ % (dev_prod(env),payload['fips_code'],int(payload['year']), payload['url'], payload['state'].title())
+    """ % (dev_prod(env),dev_prod(env),payload['fips'],int(payload['year']), payload['url'], payload['state_name'].title())
     )
 
     result = client.execute(query)
+
+    return(None)
 
 def prep_base_payload(env: str, payload: json) -> gql:
     """
@@ -359,30 +361,46 @@ def setting_check(val: str) -> dict:
     except:
         print("Error: ",val)
 
-def state_push(state: str,url: str,year: str) ->  None:
+def state_push(env: str, state: str,url: str,year: str) ->  None:
     """
     Push State Info 
     Push info about a state to API
     
     Arguments
     ------
+    env (str): Indicates if data should be pushed to PROD or DEV db
     state (str): State that is being pushed
     url (str): URL to SAMHSA URS page for state/year
     year (str): Year that is being pushed
     """
 
-    import json
+    from gql import gql
+
     # Prep outbound state data
-    state_outbound = json.dumps(
-        {
+    state_outbound =  {
             "fips": get_fips(state),
             "state_name": state.title(),
             "url": url,
             "year": int(year),
         }
-    )
 
-    state_send(state_outbound)
+    client = prep_call()
+
+    state_pull = gql('''
+            query pull_state {
+            %sstate(where: {fips: {_eq: "%s"}, state_name: {_eq: "%s"}, url: {_eq: "%s"},year: {_eq: %s}}) {
+                fips
+                state_name
+                url
+                year
+            }
+        }''' % (dev_prod(env),state_outbound['fips'],state_outbound['state_name'],state_outbound['url'],state_outbound['year']))
+    result = client.execute(state_pull)
+    
+    if not result[dev_prod(env)+"state"]:
+        state_send(env,state_outbound)
+    else:
+        return(None)
 
 def urs_data_get(env: str, state: str, year: str) -> DataFrame:
     """

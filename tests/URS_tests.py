@@ -3,7 +3,7 @@ import utility as util
 
 """
 Tests needed:
--- urs_data_get(state: str, year: str): no data returned
+-- state_push
 """
 
 ## urs_data_get
@@ -39,3 +39,15 @@ def test_dev_prod_prod():
 def test_dev_prod_invalid():
     with pytest.raises(Exception):
         util.dev_prod(env='invalid')
+
+##test state_send(env:str,payload: dict)
+#def test_state_send_success():
+
+
+##test state push
+def test_state_push_duplicate(env='dev',state='Alabama',url='test',year = '2021'):
+    assert util.state_push(env,state,url,year) == None
+
+def test_state_push_success(env='dev',state='Alabama',url='test',year = '2021'):
+    import random
+    assert util.state_push(env,state,url,year=str(random.randint(1, 999))) == None
