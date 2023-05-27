@@ -4,7 +4,6 @@ import numpy as np
 import viz_utility as vutil
 import altair as alt
 
-
 #Initalize
 metric_select = 'Select Metric'
 table_select = 'Select Table'
@@ -35,9 +34,6 @@ if table_select != 'Select Table':
     metric_select = st.selectbox(
         'What metric would you like to review?',
         ('Select Metric',)+tuple(data['metric_name'][data.table_name==table_select].unique()))
-
-data_load_state = st.text('Loading data...')
-data_load_state.text("Done! (using st.cache_data)")
 
 if st.checkbox('Show raw data'):
     if metric_select != 'Select Metric' and table_select != 'Select Table':
