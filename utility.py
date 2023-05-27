@@ -500,3 +500,20 @@ def dev_prod(env: str) -> str:
             return('')
         case _:
             raise Exception
+        
+def get_URL(state: str, year:str) -> str:
+    """
+    Get URL  
+    Return state URL value based on state name and year
+    
+    Arguments
+    ------
+    state (str): Name of state for which URL is being requested
+    year (str): Year for which URL is being requested
+    """
+
+    import json
+
+    state_urls = json.load(open("./data/state_data.json"))
+
+    return(state_urls[state.title()][year])
