@@ -45,3 +45,32 @@ def viz_data_get(domain: str = None) -> DataFrame:
     result = client.execute(query)
 
     return(pd.DataFrame.from_dict(result['metrics']))
+
+def url_data_get() -> DataFrame:
+    """
+    Get URL Data  
+    Return URL data from API for available state/years
+    
+    Arguments
+    ------
+    None
+    """
+
+    import pandas as pd
+    import utility as util
+    from gql import gql
+
+    client = util.prep_call()
+
+    query = gql(
+        '''query pull_state {
+            state {
+                state_name
+                url
+                year
+            }
+            }''')
+
+    result = client.execute(query)
+
+    return(pd.DataFrame.from_dict(result['state']).sort_values(by='year'))

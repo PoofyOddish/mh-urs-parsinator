@@ -10,3 +10,4 @@ This project uses [Tabula-py](https://github.com/chezou/tabula-py) to parse Unif
 * Appropriateness + outcomes tables are problematic - will circle back
 * Translate some of the demographic categories so they're used consistently
 * Access domain sometimes skips first row - need to adjust
+* Pull GQL queries into separate files
