@@ -361,6 +361,23 @@ def setting_check(val: str) -> dict:
     except:
         print("Error: ",val)
 
+def state_pull(env:str,fips: str,state_name:str,url:str,year:str) -> dict:
+    client = prep_call()
+
+    state_pull = gql('''
+            query pull_state {
+            %sstate(where: {fips: {_eq: "%s"}, state_name: {_eq: "%s"}, url: {_eq: "%s"},year: {_eq: %s}}) {
+                fips
+                state_name
+                url
+                year
+            }
+        }''' % (env,fips,state_name,url,year))
+    
+    result = client.execute(state_pull)
+
+    return(result)
+
 def state_push(env: str, state: str,url: str,year: str) ->  None:
     """
     Push State Info 
@@ -384,18 +401,7 @@ def state_push(env: str, state: str,url: str,year: str) ->  None:
             "year": int(year),
         }
 
-    client = prep_call()
-
-    state_pull = gql('''
-            query pull_state {
-            %sstate(where: {fips: {_eq: "%s"}, state_name: {_eq: "%s"}, url: {_eq: "%s"},year: {_eq: %s}}) {
-                fips
-                state_name
-                url
-                year
-            }
-        }''' % (dev_prod(env),state_outbound['fips'],state_outbound['state_name'],state_outbound['url'],state_outbound['year']))
-    result = client.execute(state_pull)
+    result = state_pull(dev_prod(env),state_outbound['fips'],state_outbound['state_name'],state_outbound['url'],state_outbound['year'])
 
     if not result[dev_prod(env)+"state"]:
         state_send(env,state_outbound)
