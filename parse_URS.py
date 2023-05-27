@@ -1,9 +1,12 @@
-def urs_parsinator(env: str , state: str, year: str,url: str,page_range:str = 'all') -> None:
+def urs_parsinator(env: str , state: str, year: str,page_range:str = 'all') -> None:
     import tabula
     import utility as util
     import table_parse_utility as tp_util
     import numpy as np
 
+    #Pull relevant URL
+    url = util.get_URL(state,year)
+    
     #Add state/year to state table
     util.state_push(env, state,url,year)
     
@@ -116,9 +119,3 @@ def urs_parsinator(env: str , state: str, year: str,url: str,page_range:str = 'a
         except Exception as e:
             print("Something bad happened. Will deal with that later.")
             print(e)
-
-urs_parsinator('prod',
-               "Alabama",
-               "2021",
-               "https://www.samhsa.gov/data/sites/default/files/reports/rpt39371/Alabama.pdf",
-               "1-3")
