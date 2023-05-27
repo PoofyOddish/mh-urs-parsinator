@@ -1,6 +1,5 @@
 import json
 from gql import Client,gql
-from pandas import DataFrame
 
 def get_fips(state: str) -> str:
     """
@@ -396,13 +395,13 @@ def state_push(env: str, state: str,url: str,year: str) ->  None:
             }
         }''' % (dev_prod(env),state_outbound['fips'],state_outbound['state_name'],state_outbound['url'],state_outbound['year']))
     result = client.execute(state_pull)
-    
+
     if not result[dev_prod(env)+"state"]:
         state_send(env,state_outbound)
     else:
         return(None)
 
-def urs_data_get(env: str, state: str, year: str) -> DataFrame:
+def urs_data_get(env: str, state: str, year: str) -> dict:
     """
     Get URS Data  
     Return URS data from API for selected State/Year
