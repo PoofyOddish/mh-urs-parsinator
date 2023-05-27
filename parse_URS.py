@@ -48,14 +48,14 @@ def urs_parsinator(env: str , state: str, year: str,page_range:str = 'all') -> N
 
             elif set(domain_tables['NOMS'])&set(df[d].iloc[1].index.tolist()):
                 table_name = util.name_table(df[d].iloc[row][1])
-                metric_name = input("Confirm metric name: ")
+                metric_name = input("Confirm NOMS metric name: ")
 
                 for row in range(0, df[d].shape[0]):
                     if df[d].iloc[row][0] not in ['Demographics']:
                         if df[d].iloc[row][0] is not np.nan and df[d].iloc[row][1] is not np.nan:
                             demographic=util.demographic_check(df[d].iloc[row][0])
                             
-                            access_metric = util.compile_base_metric(state,year,"ACCESS",table_name,metric_name,df[d].iloc[row][1])
+                            access_metric = util.compile_base_metric(state,year,"NOMS",table_name,util.sanitize(metric_name),df[d].iloc[row][1])
 
                             dup_check = util.check_dup(access_metric,[x for x in existing_data[util.dev_prod(env)+'metrics'] if x['domain'] == 'ACCESS'])
 

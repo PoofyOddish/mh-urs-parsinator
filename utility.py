@@ -223,6 +223,7 @@ def sanitize(val: str) -> str:
     """
 
     val = val.replace('"', '')
+    val = val.replace('*', '')
     return(val)
 
 def demographic_check(val: str) -> tuple:

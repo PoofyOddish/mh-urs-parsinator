@@ -20,7 +20,11 @@ def noms_parsing(env: str, df: DataFrame,state: str,year: str, URS_data: list) -
             & set(["State", "State Number", "State Rate"])):
             for row in range(0, df.shape[0]):
 
-                noms_metric = util.compile_base_metric(state,year,"NOMS",df.columns[0],df.iloc[row][0],df.iloc[row].loc[elem])
+                table_name = util.sanitize(df.columns[0])
+                metric_name = util.sanitize(df.iloc[row][0])
+                metric_value = df.iloc[row].loc[elem]
+
+                noms_metric = util.compile_base_metric(state,year,"NOMS",table_name,metric_name,metric_value)
                 
                 dup_check = util.check_dup(noms_metric,URS_data)
 
