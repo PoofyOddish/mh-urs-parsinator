@@ -16,13 +16,47 @@
         "2008":"https://www.samhsa.gov/data/report/2008-noms-cmhs-uniform-reporting-system",
         "2007":"https://www.samhsa.gov/data/report/2007-noms-cmhs-uniform-reporting-system"
     }
-    ,"Alaska":{}
-    ,"Arizona":{}
-    ,"Arkansas":{}
-    ,"California":{}
-    ,"Colorado":{}
-    ,"Connecticut":{}
-    ,"Delaware":{}
+    ,"Alaska":{
+        "2021":"https://www.samhsa.gov/data/sites/default/files/reports/rpt39372/Alaska.pdf",
+        "2020":"https://www.samhsa.gov/data/sites/default/files/reports/rpt35256/Alaska.pdf",
+        "2019":"https://www.samhsa.gov/data/sites/default/files/reports/rpt27929/Alaska%202019%20URS%20Output%20Tables/Alaska%202019%20URS%20Output%20Tables.pdf",
+        "2018":"https://www.samhsa.gov/data/sites/default/files/cbhsq-reports/Alaska-2018.pdf",
+        "2017":"https://www.samhsa.gov/data/sites/default/files/cbhsq-reports/Alaska-2017.pdf",
+        "2016":"https://www.samhsa.gov/data/sites/default/files/Alaska-2016.pdf",
+        "2015":"https://www.samhsa.gov/data/sites/default/files/Alaska.pdf",
+        "2014":"https://www.samhsa.gov/data/sites/default/files/URSTables2014/Alaska.pdf",
+        "2013":"https://www.samhsa.gov/data/sites/default/files/URSTables2013/Alaska.pdf",
+        "2012":"https://www.samhsa.gov/data/sites/default/files/URSTables2012/Alaska.pdf",
+        "2011":"https://www.samhsa.gov/data/sites/default/files/URSTables2011/Alaska.pdf",
+        "2010":"Not available",
+        "2009":"https://www.samhsa.gov/data/report/2009-noms-cmhs-uniform-reporting-system",
+        "2008":"https://www.samhsa.gov/data/report/2008-noms-cmhs-uniform-reporting-system",
+        "2007":"https://www.samhsa.gov/data/report/2007-noms-cmhs-uniform-reporting-system"
+    }
+    ,"Arizona":{
+        "2021":"https://www.samhsa.gov/data/sites/default/files/reports/rpt39382/Arizona.pdf",
+        "2020":"https://www.samhsa.gov/data/sites/default/files/reports/rpt35265/Arizona.pdf"
+    }
+    ,"Arkansas":{
+        "2021":"https://www.samhsa.gov/data/sites/default/files/reports/rpt39383/Arkansas.pdf",
+        "2020":"https://www.samhsa.gov/data/sites/default/files/reports/rpt35266/Arkansas.pdf"
+    }
+    ,"California":{
+        "2021":"https://www.samhsa.gov/data/sites/default/files/reports/rpt39384/California.pdf",
+        "2020":"https://www.samhsa.gov/data/sites/default/files/reports/rpt35268/California.pdf"
+    }
+    ,"Colorado":{
+        "2021":"https://www.samhsa.gov/data/sites/default/files/reports/rpt39385/Colorado.pdf",
+        "2020":"https://www.samhsa.gov/data/sites/default/files/reports/rpt35285/Colorado.pdf"
+    }
+    ,"Connecticut":{
+        "2021":"https://www.samhsa.gov/data/sites/default/files/reports/rpt39386/Connecticut.pdf",
+        "2020":"https://www.samhsa.gov/data/sites/default/files/reports/rpt35286/Connecticut.pdf"
+    }
+    ,"Delaware":{
+        "2021":"https://www.samhsa.gov/data/sites/default/files/reports/rpt39387/Delaware.pdf",
+        "2020":"https://www.samhsa.gov/data/sites/default/files/reports/rpt35287/Delaware.pdf"
+    }
     ,"Florida":{}
     ,"Georgia":{}
     ,"Hawaii":{}
