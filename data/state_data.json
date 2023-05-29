@@ -35,36 +35,87 @@
     }
     ,"Arizona":{
         "2021":"https://www.samhsa.gov/data/sites/default/files/reports/rpt39382/Arizona.pdf",
-        "2020":"https://www.samhsa.gov/data/sites/default/files/reports/rpt35265/Arizona.pdf"
+        "2020":"https://www.samhsa.gov/data/sites/default/files/reports/rpt35265/Arizona.pdf",
+        "2019":"https://www.samhsa.gov/data/sites/default/files/reports/rpt27931/Arizona%202019%20URS%20Output%20Tables/Arizona%202019%20URS%20Output%20Tables.pdf",
+        "2018":"https://www.samhsa.gov/data/sites/default/files/cbhsq-reports/Arizona-2018.pdf",
+        "2017":"https://www.samhsa.gov/data/sites/default/files/cbhsq-reports/Arizona-2017.pdf",
+        "2016":"https://www.samhsa.gov/data/sites/default/files/Arizona-2016.pdf",
+        "2015":"https://www.samhsa.gov/data/sites/default/files/Arizona.pdf",
+        "2014":"https://www.samhsa.gov/data/sites/default/files/URSTables2014/Arizona.pdf",
+        "2013":"https://www.samhsa.gov/data/sites/default/files/URSTables2013/Arizona.pdf",
+        "2012":"https://www.samhsa.gov/data/sites/default/files/URSTables2012/Arizona.pdf",
+        "2011":"https://www.samhsa.gov/data/sites/default/files/URSTables2011/Arizona.pdf",
+        "2010":"https://www.samhsa.gov/data/sites/default/files/URSTables2010/Arizona.pdf",
+        "2009":"https://www.samhsa.gov/data/report/2009-noms-cmhs-uniform-reporting-system",
+        "2008":"https://www.samhsa.gov/data/report/2008-noms-cmhs-uniform-reporting-system",
+        "2007":"https://www.samhsa.gov/data/report/2007-noms-cmhs-uniform-reporting-system"
     }
     ,"Arkansas":{
         "2021":"https://www.samhsa.gov/data/sites/default/files/reports/rpt39383/Arkansas.pdf",
-        "2020":"https://www.samhsa.gov/data/sites/default/files/reports/rpt35266/Arkansas.pdf"
+        "2020":"https://www.samhsa.gov/data/sites/default/files/reports/rpt35266/Arkansas.pdf",
+
+        "2009":"https://www.samhsa.gov/data/report/2009-noms-cmhs-uniform-reporting-system",
+        "2008":"https://www.samhsa.gov/data/report/2008-noms-cmhs-uniform-reporting-system",
+        "2007":"https://www.samhsa.gov/data/report/2007-noms-cmhs-uniform-reporting-system"
     }
     ,"California":{
         "2021":"https://www.samhsa.gov/data/sites/default/files/reports/rpt39384/California.pdf",
-        "2020":"https://www.samhsa.gov/data/sites/default/files/reports/rpt35268/California.pdf"
+        "2020":"https://www.samhsa.gov/data/sites/default/files/reports/rpt35268/California.pdf",
+
+        "2009":"https://www.samhsa.gov/data/report/2009-noms-cmhs-uniform-reporting-system",
+        "2008":"https://www.samhsa.gov/data/report/2008-noms-cmhs-uniform-reporting-system",
+        "2007":"https://www.samhsa.gov/data/report/2007-noms-cmhs-uniform-reporting-system"
     }
     ,"Colorado":{
         "2021":"https://www.samhsa.gov/data/sites/default/files/reports/rpt39385/Colorado.pdf",
-        "2020":"https://www.samhsa.gov/data/sites/default/files/reports/rpt35285/Colorado.pdf"
+        "2020":"https://www.samhsa.gov/data/sites/default/files/reports/rpt35285/Colorado.pdf",
+
+        "2009":"https://www.samhsa.gov/data/report/2009-noms-cmhs-uniform-reporting-system",
+        "2008":"https://www.samhsa.gov/data/report/2008-noms-cmhs-uniform-reporting-system",
+        "2007":"https://www.samhsa.gov/data/report/2007-noms-cmhs-uniform-reporting-system"
     }
     ,"Connecticut":{
         "2021":"https://www.samhsa.gov/data/sites/default/files/reports/rpt39386/Connecticut.pdf",
-        "2020":"https://www.samhsa.gov/data/sites/default/files/reports/rpt35286/Connecticut.pdf"
+        "2020":"https://www.samhsa.gov/data/sites/default/files/reports/rpt35286/Connecticut.pdf",
+
+        "2009":"https://www.samhsa.gov/data/report/2009-noms-cmhs-uniform-reporting-system",
+        "2008":"https://www.samhsa.gov/data/report/2008-noms-cmhs-uniform-reporting-system",
+        "2007":"https://www.samhsa.gov/data/report/2007-noms-cmhs-uniform-reporting-system"
     }
     ,"Delaware":{
         "2021":"https://www.samhsa.gov/data/sites/default/files/reports/rpt39387/Delaware.pdf",
-        "2020":"https://www.samhsa.gov/data/sites/default/files/reports/rpt35287/Delaware.pdf"
+        "2020":"https://www.samhsa.gov/data/sites/default/files/reports/rpt35287/Delaware.pdf",
+
+        "2009":"https://www.samhsa.gov/data/report/2009-noms-cmhs-uniform-reporting-system",
+        "2008":"https://www.samhsa.gov/data/report/2008-noms-cmhs-uniform-reporting-system",
+        "2007":"https://www.samhsa.gov/data/report/2007-noms-cmhs-uniform-reporting-system"
     }
-    ,"Florida":{}
-    ,"Georgia":{}
-    ,"Hawaii":{}
-    ,"Idaho":{}
-    ,"Illinois":{}
-    ,"Indiana":{}
-    ,"Iowa":{}
-    ,"Kansas":{}
+    ,"Florida":{
+        "2021":"https://www.samhsa.gov/data/sites/default/files/reports/rpt39390/Florida.pdf",
+        "2020":"https://www.samhsa.gov/data/sites/default/files/reports/rpt35291/Florida.pdf"
+    }
+    ,"Georgia":{
+        "2021":"https://www.samhsa.gov/data/sites/default/files/reports/rpt39391/Georgia.pdf",
+        "2020":"https://www.samhsa.gov/data/sites/default/files/reports/rpt35293/Georgia.pdf"
+    }
+    ,"Hawaii":{
+        "2021":"https://www.samhsa.gov/data/sites/default/files/reports/rpt39393/Hawaii.pdf"
+    }
+    ,"Idaho":{
+        "2021":"https://www.samhsa.gov/data/sites/default/files/reports/rpt39394/Idaho.pdf"
+    }
+    ,"Illinois":{
+        "2021":"https://www.samhsa.gov/data/sites/default/files/reports/rpt39395/Illinois.pdf"
+    }
+    ,"Indiana":{
+        "2021":"https://www.samhsa.gov/data/sites/default/files/reports/rpt39397/Indiana.pdf"
+    }
+    ,"Iowa":{
+        "2021":"https://www.samhsa.gov/data/sites/default/files/reports/rpt39437/Iowa.pdf"
+    }
+    ,"Kansas":{
+        "2021":"https://www.samhsa.gov/data/sites/default/files/reports/rpt39399/Kansas.pdf"
+    }
     ,"Kentucky":{}
     ,"Louisiana":{}
     ,"Maine":{}
