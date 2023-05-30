@@ -4,6 +4,9 @@ Scripting to extract mental health-related data from [SAMHSA's URS tables](https
 ## About
 This project uses [Tabula-py](https://github.com/chezou/tabula-py) to parse Uniform Reporting System (URS) data stored in PDF format. Extracted data is validated using [Pydantic](https://github.com/pydantic/pydantic) and pushed into a GraphQL API (coming soon).
 
+### Data Workflows
+![Data workflow](./images/pipeline_diagram.png)
+
 ## [Explore data on Streamlit](https://mh-urs-parsinator.streamlit.app/) [In Development]
 ## To Do
 * Instances where Total Served phrase wraps causes chaos.
@@ -11,3 +14,5 @@ This project uses [Tabula-py](https://github.com/chezou/tabula-py) to parse Unif
 * Translate some of the demographic categories so they're used consistently
 * Access domain sometimes skips first row - need to adjust
 * Pull GQL queries into separate files
+* Create data model for metric definitions
+* Add all/remove all states to Streamlit data explorer

@@ -9,7 +9,7 @@ metric_select = 'Select Metric'
 table_select = 'Select Table'
 
 st.title('MH URS Parsinator - Data Review')
-st.header('Data Explorer')
+st.header('Multi-State Data Explorer')
 
 st.text('To view a chart, select a domain, table, and metric.')
 st.text('Otherwise, select the raw data checkbox to view data for the current selections.')
@@ -49,6 +49,10 @@ if st.checkbox('Show raw data'):
 if (not data.empty) and (metric_select != 'Select Metric') and (table_select != 'Select Table'):
     data['year']=data['year'].astype('str')
 
-    ch = alt.Chart(data[['year','state_name','metric_result']][(data['metric_name']==metric_select)&(data['table_name']==table_select)]).mark_line().encode(x='year',y='metric_result',text='state_name').encode(alt.Color("state_name")).properties(title=table_select+': '+metric_select)
+    subset = data[['year','state_name','metric_result']][(data['metric_name']==metric_select)&(data['table_name']==table_select)]
+
+    state_select = st.multiselect("Select the states to show", subset['state_name'].unique(),default=subset['state_name'].unique())
+
+    ch = alt.Chart(subset[subset['state_name'].isin(state_select)]).mark_line().encode(x='year',y='metric_result',text='state_name').encode(alt.Color("state_name")).properties(title=table_select+': '+metric_select)
 
     st.altair_chart(ch, use_container_width=True)
