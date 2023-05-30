@@ -9,7 +9,7 @@ metric_select = 'Select Metric'
 table_select = 'Select Table'
 
 st.title('MH URS Parsinator - Data Review')
-st.header('Data Explorer')
+st.header('Multi-State Data Explorer')
 
 st.text('To view a chart, select a domain, table, and metric.')
 st.text('Otherwise, select the raw data checkbox to view data for the current selections.')
